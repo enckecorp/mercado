@@ -83,7 +83,7 @@
                         </h1>
                         <ol class="breadcrumb">
                             <li>
-                                <a href="../../index.php"><i class="fa fa-dashboard"></i> Início</a>
+                                <a href="../../index.php"><i class="fa fa-home"></i> Início</a>
                             </li>
                             <li>
                                 <a href="javascript:;"><i class="fa fa-usd"></i> Compras</a>
