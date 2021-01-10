@@ -1,4 +1,8 @@
-<?php require_once("functions_index.php"); ?>
+<?php
+  require_once("api/path.php");
+  $return = json_decode(file_get_contents($path."?tkn=3f6b5c64413139312bbc6c04c6060369"));
+  $return_old = json_decode(file_get_contents($path."?tkn=3f6b5c64413139312bbc6c04c6060369&year=".(date("Y")-1)));
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -12,6 +16,7 @@
 
     <title>Mercado</title>
 
+      
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -35,22 +40,21 @@
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
       google.charts.setOnLoadCallback(drawChart2);
-
-      function drawChart() {  
+      function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Mês', 'Gastos'],
-          ['1',  <?php echo gastos_brutos_mes(1); ?>],
-          ['2',  <?php echo gastos_brutos_mes(2); ?>],
-          ['3',  <?php echo gastos_brutos_mes(3); ?>],
-          ['4',  <?php echo gastos_brutos_mes(4); ?>],
-          ['5',  <?php echo gastos_brutos_mes(5); ?>],
-          ['6',  <?php echo gastos_brutos_mes(6); ?>],
-          ['7',  <?php echo gastos_brutos_mes(7); ?>],
-          ['8',  <?php echo gastos_brutos_mes(8); ?>],
-          ['9',  <?php echo gastos_brutos_mes(9); ?>],
-          ['10',  <?php echo gastos_brutos_mes(10); ?>],
-          ['11',  <?php echo gastos_brutos_mes(11); ?>],
-          ['12',  <?php echo gastos_brutos_mes(12); ?>]
+          ['1',  <?php echo $return->bruto_mes[1]; ?>],
+          ['2',  <?php echo $return->bruto_mes[2]; ?>],
+          ['3',  <?php echo $return->bruto_mes[3]; ?>],
+          ['4',  <?php echo $return->bruto_mes[4]; ?>],
+          ['5',  <?php echo $return->bruto_mes[5]; ?>],
+          ['6',  <?php echo $return->bruto_mes[6]; ?>],
+          ['7',  <?php echo $return->bruto_mes[7]; ?>],
+          ['8',  <?php echo $return->bruto_mes[8]; ?>],
+          ['9',  <?php echo $return->bruto_mes[9]; ?>],
+          ['10',  <?php echo $return->bruto_mes[10]; ?>],
+          ['11',  <?php echo $return->bruto_mes[11]; ?>],
+          ['12',  <?php echo $return->bruto_mes[12]; ?>]
         ]);
 
         var options = {
@@ -66,18 +70,18 @@
       function drawChart2() {
         var data = google.visualization.arrayToDataTable([
           ['Mês', 'Gastos'],
-          ['1',  <?php echo gastos_liquidos_mes(1); ?>],
-          ['2',  <?php echo gastos_liquidos_mes(2); ?>],
-          ['3',  <?php echo gastos_liquidos_mes(3); ?>],
-          ['4',  <?php echo gastos_liquidos_mes(4); ?>],
-          ['5',  <?php echo gastos_liquidos_mes(5); ?>],
-          ['6',  <?php echo gastos_liquidos_mes(6); ?>],
-          ['7',  <?php echo gastos_liquidos_mes(7); ?>],
-          ['8',  <?php echo gastos_liquidos_mes(8); ?>],
-          ['9',  <?php echo gastos_liquidos_mes(9); ?>],
-          ['10',  <?php echo gastos_liquidos_mes(10); ?>],
-          ['11',  <?php echo gastos_liquidos_mes(11); ?>],
-          ['12',  <?php echo gastos_liquidos_mes(12); ?>]
+          ['1',  <?php echo $return->liquido_mes[1]; ?>],
+          ['2',  <?php echo $return->liquido_mes[2]; ?>],
+          ['3',  <?php echo $return->liquido_mes[3]; ?>],
+          ['4',  <?php echo $return->liquido_mes[4]; ?>],
+          ['5',  <?php echo $return->liquido_mes[5]; ?>],
+          ['6',  <?php echo $return->liquido_mes[6]; ?>],
+          ['7',  <?php echo $return->liquido_mes[7]; ?>],
+          ['8',  <?php echo $return->liquido_mes[8]; ?>],
+          ['9',  <?php echo $return->liquido_mes[9]; ?>],
+          ['10',  <?php echo $return->liquido_mes[10]; ?>],
+          ['11',  <?php echo $return->liquido_mes[11]; ?>],
+          ['12',  <?php echo $return->liquido_mes[12]; ?>]
         ]);
 
         var options = {
@@ -159,7 +163,7 @@
                                         <i class="fa fa-shopping-cart fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php echo gastos_mes_row(date("m")); ?></div>
+                                        <div class="huge"><?php echo $return->mes_row[date("n")]; ?></div>
                                         <div>Compras do mês <br><?php echo date("m/Y"); ?></div>
                                     </div>
                                 </div>
@@ -174,7 +178,15 @@
                         </div>
                     </div>
                     <?php
-                        $result = gastos_liquidos_mes(date("m") - 1) - gastos_liquidos_mes(date("m"));
+                        if((date("n") - 1) == 0){
+                            $mes_old = $return_old->liquido_mes[12];
+                            $string = "12/".(date("Y") - 1);
+                        } else {
+                            $mes_old = $return->liquido_mes[date("n") - 1];
+                            $string = date("m") - 1;
+                        } 
+                        $mes = $return->liquido_mes[date("n")];
+                        $result = $mes_old - $mes;
                         if($result < 0){
                             $icon = "frown-o";
                         } else if($result > 0){
@@ -191,8 +203,8 @@
                                         <i class="fa fa-<?php echo $icon; ?> fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php echo number_format(gastos_liquidos_mes(date("m") - 1) - gastos_liquidos_mes(date("m")), 2, ',', '.'); ?></div>
-                                        <div>Economia mês <br><?php echo (date("m")-1)." => ".date("m/Y"); ?></div>
+                                        <div class="huge"><?php echo number_format($result, 2, ',', '.'); ?></div>
+                                        <div>Economia mês <br><?php echo $string." => ".date("m/Y"); ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -213,7 +225,7 @@
                                         <i class="fa fa-usd fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php echo number_format(gastos_liquidos_mes(date("m")), 2, ',', '.'); ?></div>
+                                        <div class="huge"><?php echo number_format($mes, 2, ',', '.'); ?></div>
                                         <div>Custo liquido mês <br><?php echo date("m/Y"); ?></div>
                                     </div>
                                 </div>
@@ -235,7 +247,7 @@
                                         <i class="fa fa-usd fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php echo number_format(gastos_brutos_mes(date("m")), 2, ',', '.'); ?></div>
+                                        <div class="huge"><?php echo number_format($return->bruto_mes[date("n")], 2, ',', '.'); ?></div>
                                         <div>Custo bruto mês <br><?php echo date("m/Y"); ?></div>
                                     </div>
                                 </div>
