@@ -29,18 +29,6 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script>
-      function show_all(){
-          var form_id = document.getElementById('search_status').value;
-          if(form_id == "0"){
-            document.getElementById('search_status').value = "1";    
-            document.getElementById('search').disabled = true;
-          } else {
-            document.getElementById('search_status').value = "0";
-            document.getElementById('search').disabled = false;
-          }
-      }
-    </script>
 </head>
 
 <body>
@@ -129,91 +117,38 @@
                                     </tr>
                                     <tr>
                                         <td width="15%">Ações:</td>
-                                        <td><button type="submit" class="btn btn-success" id="submit">Pesquisar</button> <button type="button" onclick="show_all();" class="btn btn-default">Mostrar todos</button></td>
+                                        <td><button type="submit" class="btn btn-success" id="submit">Pesquisar</button> <button type="button" onclick="javascript: document.getElementById('search').required = false; javascript: document.getElementById('submit').click();" class="btn btn-default">Mostrar todos</button></td>
                                     </tr>
                                 </form>
                             </tbody>
                         </table>
                         <?php
+                            require_once("../../api/path.php");
                             if(isset($_REQUEST['search'])){
                                 $search = $_REQUEST['search'];
                             } else {
                                 $search = null;
                             }
-                            if(isset($_REQUEST['search_status'])){
-                                $where = $_REQUEST['search_status'];
-                            } else {
-                                $where = null;
+                            $return = json_decode(file_get_contents($path."?tkn=63462fb02bfd351b0bf10b2aca442023&search=$search"));
+                            $show = "<table class='table table-striped table-bordered table-condensed table-hover'>
+                                <thead>
+                                    <tr>
+                                        <td>Nome</td>
+                                        <td>Local</td>
+                                        <td width='5%'>Ação</td>
+                                    <tr>
+                                </thead>
+                                <tbody>";
+                            for($i = 0;$i < count($return);$i++){
+                                $show .= "<tr>
+                                            <td>".$return[$i]->name."</td>
+                                            <td>".$return[$i]->local."</td>
+                                            <td><a href='drop.php?id=".$return[$i]->id."&tkn=cd78dc116979edf8fbc53abd01482a36' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>
+                                        </tr>";
                             }
-                            require_once("../../link.php");
-                            if($where != null && $where == "1"){
-                                $sql = mysqli_query($link,"select * from mercados order by name");
-                                if(mysqli_num_rows($sql) != null){
-                                    $show = "<table class='table table-striped table-bordered table-condensed table-hover'>
-                                        <thead>
-                                            <tr>
-                                                <td>Nome</td>
-                                                <td>Local</td>
-                                                <td width='5%'>Ação</td>
-                                            <tr>
-                                        </thead>
-                                        <tbody>";
-                                    while($dados = mysqli_fetch_array($sql)){
-                                        $show .= "<tr>
-                                                    <td>".$dados['name']."</td>
-                                                    <td>".$dados['local']."</td>
-                                                    <td><a href='drop.php?id=".$dados['id']."' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>";
-                                    }
-                                    $show .= "</tbody>
-                                                </table>";
-                                    echo $show;
-                                }
-                            } else if($search != null){
-                                $sql = mysqli_query($link,"select * from mercados where id like '%$search%' or name like '%$search%' or local like '%$search%' order by name");
-                                if(mysqli_num_rows($sql) != null){
-                                    $show = "<table class='table table-striped table-bordered table-condensed table-hover'>
-                                        <thead>
-                                            <tr>
-                                                <td>Nome</td>
-                                                <td>Local</td>
-                                                <td width='5%'>Ação</td>
-                                            <tr>
-                                        </thead>
-                                        <tbody>";
-                                    while($dados = mysqli_fetch_array($sql)){
-                                        $show .= "<tr>
-                                                    <td>".$dados['name']."</td>
-                                                    <td>".$dados['local']."</td>
-                                                    <td><a href='drop.php?id=".$dados['id']."' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>";
-                                    }
-                                    $show .= "</tbody>
-                                                </table>";
-                                    echo $show;
-                                }
-                            }
-                            if($where == null && $search == null){
-                                $sql = mysqli_query($link,"select * from mercados order by name");
-                                if(mysqli_num_rows($sql) != null){
-                                    $show = "<table class='table table-striped table-bordered table-condensed table-hover'>
-                                        <thead>
-                                            <tr>
-                                                <td>Nome</td>
-                                                <td>Local</td>
-                                                <td width='5%'>Ação</td>
-                                            <tr>
-                                        </thead>
-                                        <tbody>";
-                                    while($dados = mysqli_fetch_array($sql)){
-                                        $show .= "<tr>
-                                                    <td>".$dados['name']."</td>
-                                                    <td>".$dados['local']."</td>
-                                                    <td><a href='drop.php?id=".$dados['id']."' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>";
-                                    }
-                                    $show .= "</tbody>
-                                                </table>";
-                                    echo $show;
-                                }
-                            }
+                            $show .= "</tbody>
+                                        </table>";
+                            echo $show;
                         ?>
                     </div>
                 </div>

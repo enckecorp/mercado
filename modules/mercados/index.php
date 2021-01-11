@@ -1,3 +1,4 @@
+<?php require_once("../../api/path.php"); ?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -134,7 +135,7 @@
                                         document.getElementById('send_status_string').innerHTML = "<strong>Processando...</strong>";
                                         document.getElementById('send_status').className = "alert alert-info alert-dismissable";
                                         var dados1 = $('#form1').serialize();
-                                        var url = 'send_info.php';
+                                        var url = '<?php echo $path."?tkn=747fea543b987d4f43f5efa2f6d45620"; ?>';
                                         $.ajax({
                                         type : 'POST',
                                         url  : url,

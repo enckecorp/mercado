@@ -60,5 +60,40 @@
       "mes_row"=>$mes_row
     ));
     //dash info[END]
+  } else if ($tkn == "747fea543b987d4f43f5efa2f6d45620"){
+    //send info mercado[BEGIN]
+    if(isset($_REQUEST['name'])){
+      $name = $_REQUEST['name'];
+    } else {
+      $name = null;
+    }
+    if(isset($_REQUEST['local'])){
+      $local = $_REQUEST['local'];
+    } else {
+      $local = null;
+    }
+    if($name != null && $local != null){
+      mysqli_query($link,"insert into mercados (name, local) values ('$name','$local')");
+      echo 0;
+    }
+    //send info mercado[END]
+  } else if ($tkn == "63462fb02bfd351b0bf10b2aca442023"){
+    //get result search mercado[BEGIN]
+    if(isset($_REQUEST['search'])){
+      $search = $_REQUEST['search'];
+    } else {
+      $search = null;
+    }
+    $sql = mysqli_query($link,"select * from mercados where id like '%$search%' or name like '%$search%' or local like '%$search%' order by name limit 10");
+    $return = array();
+    while($dados = mysqli_fetch_array($sql)){
+      array_push($return,$dados);
+    }
+    echo json_encode($return);
+    //get result search mercado[END]
+  } else if ($tkn == "cd78dc116979edf8fbc53abd01482a36"){
+    //drop mercado[BEGIN]
+    mysqli_query($link,"delete from mercados where id = '$id'") or die ();
+    //drop mercado[END]
   }
 ?>
