@@ -42,6 +42,13 @@
                 document.getElementById('null').selected = true;
             }
         }
+        function send_info(){
+            var dados = '{"name":"'+document.getElementById('name').value+'","tipo":"'+document.getElementById('tipo').value+'","fech_fat":"'+document.getElementById('fech_fat').value+'"}';
+            document.getElementById('dados').innerHTML = dados;
+        }
+        function reset_info(){
+            document.getElementById('dados').innerHTML = '{"name":"","tipo":"0","fech_fat":"0"}';
+        }
     </script>
 </head>
 
@@ -124,14 +131,15 @@
                         <table class="table table-striped table-bordered table-condensed table-hover">
                             <tbody>
                                 <form action="" method="POST" id="form1">
+                                    <textarea name="dados" id="dados" hidden>{"name":"","tipo":"0","fech_fat":"0"}</textarea>
                                     <tr>
                                         <td width="15%">Nome do metodo:</td>
-                                        <td><input type="text" class="form-control" name="name" id="name" placeholder="Digite o nome ou identificação" required></td>
+                                        <td><input type="text" class="form-control" id="name" placeholder="Digite o nome ou identificação" oninput="send_info();" required></td>
                                     </tr>
                                     <tr>
                                         <td width="15%">Tipo:</td>
                                         <td>
-                                            <select class="form-control" name="tipo" id="tipo" onchange="fech_fat_status();">
+                                            <select class="form-control" oninput="send_info();" id="tipo" onchange="fech_fat_status();">
                                                 <option value="0">Débito</option>
                                                 <option value="1">Crédito</option>
                                                 <option value="2">Dinheiro</option>
@@ -142,7 +150,7 @@
                                     <tr id="fech_fat_show" style="display: none;">
                                         <td width="15%">Fechamento da fatura:</td>
                                         <td>
-                                            <select class="form-control" name="fech_fat" id="fetch_fat">
+                                            <select class="form-control" oninput="send_info();" id="fech_fat">
                                                 <?php
                                                     $option = "<option value='0' id='null'>Selecione a data de fechamento</option>";
                                                     for($i = 1; $i <= 31; $i++){
@@ -155,7 +163,7 @@
                                     </tr>
                                     <tr>
                                         <td width="15%">Ações:</td>
-                                        <td><button type="submit" class="btn btn-success">Registrar</button> <button type="reset" class="btn btn-default" id="reset">Recomençar</button></td>
+                                        <td><button type="submit" class="btn btn-success">Registrar</button> <button type="reset" onclick="reset_info();" class="btn btn-default" id="reset">Recomençar</button></td>
                                     </tr>
                                 </form>
                                 <!-- ajax -->
