@@ -30,6 +30,15 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script>
+        function send_info(){
+            var dados = '{"name":"'+document.getElementById('name').value+'","local":"'+document.getElementById('local').value+'"}';
+            document.getElementById('dados').innerHTML = dados;
+        }
+        function reset_info(){
+            document.getElementById('dados').innerHTML = '{"name":"","local":""}';
+        }
+    </script>
     
 </head>
 
@@ -112,17 +121,18 @@
                         <table class="table table-striped table-bordered table-condensed table-hover">
                             <tbody>
                                 <form action="" method="POST" id="form1">
+                                    <textarea name="dados" id="dados" hidden>{"name":"","local":""}</textarea>
                                     <tr>
                                         <td width="15%">Nome:</td>
-                                        <td><input type="text" class="form-control" name="name" placeholder="Digite o nome" id="name" required></td>
+                                        <td><input type="text" class="form-control" id="name" placeholder="Digite o nome" id="name" oninput="send_info();" required></td>
                                     </tr>
                                     <tr>
                                         <td width="15%">Local:</td>
-                                        <td><input type="text" class="form-control" name="local" placeholder="Digite o local"></td>
+                                        <td><input type="text" class="form-control" oninput="send_info();" id="local" placeholder="Digite o local"></td>
                                     </tr>
                                     <tr>
                                         <td width="15%">Ações:</td>
-                                        <td><button type="submit" class="btn btn-success">Registrar</button> <button type="reset" class="btn btn-default" id="reset">Recomençar</button></td>
+                                        <td><button type="submit" class="btn btn-success">Registrar</button> <button type="reset" class="btn btn-default" id="reset" onclick="reset_info();">Recomençar</button></td>
                                     </tr>
                                 </form>
                                 <!-- ajax -->

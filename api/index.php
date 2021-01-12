@@ -62,18 +62,8 @@
     //dash info[END]
   } else if ($tkn == "747fea543b987d4f43f5efa2f6d45620"){
     //send info mercado[BEGIN]
-    if(isset($_REQUEST['name'])){
-      $name = $_REQUEST['name'];
-    } else {
-      $name = null;
-    }
-    if(isset($_REQUEST['local'])){
-      $local = $_REQUEST['local'];
-    } else {
-      $local = null;
-    }
-    if($name != null && $local != null){
-      mysqli_query($link,"insert into mercados (name, local) values ('$name','$local')");
+    if($dados != null){
+      mysqli_query($link,"insert into mercados (name, local) values ('$dados->name','$dados->local')");
       echo 0;
     }
     //send info mercado[END]
@@ -93,7 +83,19 @@
     //get result search mercado[END]
   } else if ($tkn == "cd78dc116979edf8fbc53abd01482a36"){
     //drop mercado[BEGIN]
-    mysqli_query($link,"delete from mercados where id = '$id'") or die ();
+    $status = 0;
+    if($id != null){
+      mysqli_query($link,"delete from mercados where id = '$id'") or die ();
+      $status = 1;
+    }
+    echo $status;
     //drop mercado[END]
+  } else if ($tkn == "7ba3da83bb9fa83bcf3bfb3133e0e2e3"){
+    //post info pagamentos[BEGIN]
+    if($dados != null){
+      mysqli_query($link,"insert into met_pag (name, tipo, fech_fat) values ('$dados->name','$dados->tipo','$dados->fech_fat')");
+      echo 0;
+    }
+    //post info pagamentos[END]
   }
 ?>
