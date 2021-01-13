@@ -97,5 +97,14 @@
       echo 0;
     }
     //post info pagamentos[END]
+  } else if ($tkn == "73bb1f6a1042ec586679013fbbf39087"){
+    //drop met pagamento[BEGIN]
+    $status = 0;
+    if($id != null){
+      mysqli_query($link,"delete from met_pag where id = '$id'") or die ();
+      $status = 1;
+    }
+    echo $status;
+    //drop met pagamento[END]
   }
 ?>

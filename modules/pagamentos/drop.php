@@ -4,9 +4,14 @@
     } else {
         $id = null;
     }
-    if($id != null){
-        require_once("../../link.php");
-        mysqli_query($link,"delete from met_pag where id = '$id'");
+    if(isset($_REQUEST['tkn'])){
+        $tkn = $_REQUEST['tkn'];
+    } else {
+        $tkn = null;
+    }
+    if($id != null && $tkn != null){
+        require_once("../../api/path.php");
+        $return = file_get_contents($path."?tkn=$tkn&id=$id");
     }
     echo "<script> history.back(); </script>";
 ?>
